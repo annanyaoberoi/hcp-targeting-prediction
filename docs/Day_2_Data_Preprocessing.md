@@ -1,87 +1,123 @@
-# ✦ Day 02 — Data Integration & Feature Engineering
+# ✦ DAY 02 — DATA INTEGRATION & FEATURE ENGINEERING
 
-> Transforming raw prescription records into a structured, provider-level dataset for predictive modelling.
+<p align="center">
+  <img src="https://img.shields.io/badge/PROJECT-HCP%20TARGETING-800020?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/DATA-CMS%20MEDICARE-6D2932?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/STATUS-COMPLETED-2E7D32?style=for-the-badge" />
+</p>
+
+<p align="center">
+  <em>From raw prescription records to structured, provider-level features.</em>
+</p>
 
 ---
 
-## 🎯 Today's Objective
+## ◈ 01. Overview
 
-Expand the initial Jardiance dataset by incorporating competitor drug data, perform essential preprocessing, and engineer provider-level features.
+The second phase focused on expanding the initial Jardiance dataset by incorporating competitor drug data, performing data preprocessing, and engineering provider-level features.
 
-The goal was to move from individual drug-level prescription records to a unified dataset containing one row per healthcare provider (HCP).
+The objective was to transform individual drug-level prescription records into a unified dataset containing one row per healthcare provider (HCP).
 
-## 01 · Data Collection
+| Project Detail | Description |
+|:---|:---|
+| Data Source | CMS Medicare Part D Prescribers |
+| Reporting Year | 2021 |
+| Data Access | Official CMS Data API |
+| Primary Identifier | National Provider Identifier (NPI) |
+| Final Output | `provider_level_2021.csv` |
 
-**Source:** CMS Medicare Part D Prescribers Dataset  
-**Reporting Year:** 2021  
-**Access Method:** Official CMS Data API
+---
 
-Three competitor drugs belonging to the SGLT2 inhibitor class were retrieved to complement the existing Jardiance dataset.
+## ◈ 02. Data Collection
 
-| Drug Brand | Records |
+**Four SGLT2 inhibitor brands were included in the analysis.**
+
+| Drug Brand | Records Retrieved |
 |:---|---:|
 | Jardiance | 87,157 |
 | Farxiga | 38,921 |
 | Invokana | 12,880 |
 | Steglatro | 634 |
-| **Total** | **139,592** |
+| **TOTAL** | **139,592** |
 
-All datasets were collected using API pagination and combined into a single DataFrame.
+<details>
+<summary>⌁ Data collection methodology</summary>
 
-## 02 · Dataset Integration
+- Retrieved prescription records through the official CMS Data API.
+- Applied brand-specific filters for each drug.
+- Used pagination to retrieve records in batches.
+- Combined all four datasets into a unified DataFrame.
 
-The four individual drug datasets were concatenated to create a unified prescription dataset.
+</details>
 
-| Dataset Metric | Value |
+---
+
+## ◈ 03. Dataset Integration
+
+The individual datasets were concatenated into a single dataset to enable cross-drug prescription analysis.
+
+<p align="center">
+  <img src="https://img.shields.io/badge/139%2C592-TOTAL%20RECORDS-800020?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/101%2C500-UNIQUE%20PROVIDERS-6D2932?style=for-the-badge" />
+</p>
+
+| Dataset Metric | Result |
 |:---|---:|
 | Total Records | 139,592 |
 | Unique Providers | 101,500 |
 | Total Columns | 22 |
 | Duplicate Records | 0 |
 
-**Key Identifier:** `Prscrbr_NPI`
+**Provider identification:** `Prscrbr_NPI`
 
-NPI (National Provider Identifier) was used to identify individual healthcare providers across the prescription records.
+The NPI field was retained as the unique identifier for each healthcare provider.
 
-## 03 · Data Inspection & Cleaning
+---
 
-The combined dataset was inspected to understand its structure, data types and missing values.
+## ◈ 04. Data Inspection & Preprocessing
+
+The combined dataset was inspected to understand its structure, data types and missing-value patterns.
 
 **Key observations:**
-- 22 columns were initially stored as `object` data types.
-- Empty values were observed in beneficiary-related fields.
-- No unexpected non-numeric values were detected in the selected numerical metrics.
 
-### Numerical Data Conversion
+- The dataset contained 22 columns.
+- All columns were initially stored as `object` data types.
+- Empty values were observed in beneficiary-related and age-specific fields.
+- No unexpected non-numeric values were found in the selected core numerical metrics.
 
-The following core prescription metrics were converted into appropriate numerical formats:
+### Numerical Feature Conversion
 
-- `Tot_Clms`
-- `Tot_30day_Fills`
-- `Tot_Day_Suply`
-- `Tot_Drug_Cst`
+Four core prescription metrics were converted into appropriate numerical data types.
 
-<details>
-  <summary>Data quality check</summary>
+| Feature | Description |
+|:---|:---|
+| `Tot_Clms` | Total prescription claims |
+| `Tot_30day_Fills` | Total 30-day fills |
+| `Tot_Day_Suply` | Total day supply |
+| `Tot_Drug_Cst` | Total drug cost |
 
-  | Feature | Missing Values After Conversion |
-  |:---|---:|
-  | Tot_Clms | 0 |
-  | Tot_30day_Fills | 0 |
-  | Tot_Day_Suply | 0 |
-  | Tot_Drug_Cst | 0 |
+**Validation result**
 
-</details>
+| Core Metric | Missing Values |
+|:---|---:|
+| `Tot_Clms` | 0 |
+| `Tot_30day_Fills` | 0 |
+| `Tot_Day_Suply` | 0 |
+| `Tot_Drug_Cst` | 0 |
 
-Beneficiary-related and age-specific fields were excluded from the initial feature aggregation to avoid treating unavailable or potentially suppressed values as actual zero values.
+Beneficiary-related and age-specific fields were excluded from the initial aggregation. Their missing values were not blindly replaced with zero.
 
-## 04 · Provider-Level Feature Engineering
+---
 
-**The key transformation of Day 2.**
+## ◈ 05. Provider-Level Feature Engineering
 
-The original dataset contained multiple rows for the same provider because each provider could prescribe multiple drug brands.
+<blockquote>
+  <strong>The key transformation of Day 02.</strong>
 
-A pivot-table transformation was applied using:
+  Multiple drug-level records belonging to the same provider were transformed into a single provider-level record.
+</blockquote>
+
+A pivot-table transformation was applied using the following configuration:
 
 | Parameter | Configuration |
 |:---|:---|
@@ -91,90 +127,119 @@ A pivot-table transformation was applied using:
 | Aggregation | Sum |
 | Missing drug-metric combinations | Filled with 0 |
 
-This transformed the dataset into a provider-level structure, with separate features for each drug.
+### Engineered Feature Structure
 
-### Engineered Features
+Each provider received four prescription metrics for each of the four drug brands.
 
-For each of the four drugs, the following metrics were created:
-
-- Total Claims
-- Total 30-Day Fills
-- Total Day Supply
-- Total Drug Cost
+| Drug | Generated Features |
+|:---|:---|
+| Jardiance | Claims, Fills, Day Supply, Cost |
+| Farxiga | Claims, Fills, Day Supply, Cost |
+| Invokana | Claims, Fills, Day Supply, Cost |
+| Steglatro | Claims, Fills, Day Supply, Cost |
 
 **Example feature names:**
 
-`Jardiance_Tot_Clms`  
-`Farxiga_Tot_Clms`  
-`Invokana_Tot_Clms`  
-`Steglatro_Tot_Clms`
+```text
+Jardiance_Tot_Clms
+Jardiance_Tot_30day_Fills
+Jardiance_Tot_Day_Suply
+Jardiance_Tot_Drug_Cst
 
-Column names were flattened to create a clean, model-friendly structure.
+Farxiga_Tot_Clms
+Invokana_Tot_Clms
+Steglatro_Tot_Clms
+```
 
-## 05 · Final Dataset
-
-<details>
-  <summary>Final dataset overview</summary>
-
-  | Metric | Result |
-  |:---|---:|
-  | Total Providers | 101,500 |
-  | Total Columns | 17 |
-  | Missing Values | 0 |
-  | Duplicate Rows | 0 |
-  | Duplicate NPIs | 0 |
-
-</details>
-
-<details>
-  <summary>Dataset structure</summary>
-
-  | Component | Description |
-  |:---|:---|
-  | Provider Identifier | NPI |
-  | Jardiance Features | Claims, fills, supply, cost |
-  | Farxiga Features | Claims, fills, supply, cost |
-  | Invokana Features | Claims, fills, supply, cost |
-  | Steglatro Features | Claims, fills, supply, cost |
-
-</details>
-
-**Exported File:** `provider_level_2021.csv`
-
-The processed dataset was successfully saved and downloaded for use in the next stage.
-
-## 06 · Key Achievements
-
-- [x] Retrieved competitor prescription data through the CMS API.
-- [x] Integrated four SGLT2 inhibitor datasets.
-- [x] Inspected data types and missing values.
-- [x] Converted core numerical metrics.
-- [x] Aggregated prescription records by provider.
-- [x] Engineered drug-specific provider features.
-- [x] Validated dataset structure and data quality.
-- [x] Exported the final provider-level dataset.
-
-## 07 · What's Next?
-
-### Day 03 — Target Variable Construction
-
-The next stage focuses on obtaining the corresponding 2022 prescription data and defining the prediction target.
-
-**Planned approach:**
-
-- Use 2021 provider-level features as model inputs (X).
-- Determine 2022 Jardiance prescription performance.
-- Define the high-prescriber classification target (y).
-- Prepare the time-based modelling dataset.
-
-The objective is to identify healthcare providers who are likely to become high Jardiance prescribers based on their earlier prescription patterns.
+The resulting multi-level column names were flattened to create a clean and model-friendly structure.
 
 ---
 
-<div align="center">
+## ◈ 06. Transformation Workflow
 
-**DAY 02 · COMPLETED**
+```mermaid
+flowchart TD
+    A["CMS Medicare Part D Data — 2021"] --> B["Jardiance Dataset"]
+    A --> C["Farxiga Dataset"]
+    A --> D["Invokana Dataset"]
+    A --> E["Steglatro Dataset"]
+    B --> F["Combine All Four Datasets"]
+    C --> F
+    D --> F
+    E --> F
+    F --> G["Data Inspection & Cleaning"]
+    G --> H["Convert Core Numerical Metrics"]
+    H --> I["Provider-Level Aggregation"]
+    I --> J["Feature Engineering"]
+    J --> K["provider_level_2021.csv"]
+    classDef primary fill:#800020,color:#fff,stroke:#800020
+    classDef process fill:#f5e9ec,color:#4b1726,stroke:#b76e79
+    class A,K primary
+    class B,C,D,E,F,G,H,I,J process
+```
 
-*From raw prescription records to provider-level features.*
+---
 
-</div>
+## ◈ 07. Final Dataset & Validation
+
+<sub>FINAL OUTPUT · 2021 PROVIDER-LEVEL DATASET</sub>
+
+| Validation Metric | Final Result |
+|:---|---:|
+| Total Providers | **101,500** |
+| Total Columns | **17** |
+| Missing Values | **0** |
+| Duplicate Rows | **0** |
+| Duplicate NPIs | **0** |
+
+<p align="center">
+  <img src="https://img.shields.io/badge/101%2C500-PROVIDERS-800020?style=flat-square" />
+  <img src="https://img.shields.io/badge/17-COLUMNS-6D2932?style=flat-square" />
+  <img src="https://img.shields.io/badge/0-DUPLICATES-2E7D32?style=flat-square" />
+  <img src="https://img.shields.io/badge/0-MISSING%20VALUES-2E7D32?style=flat-square" />
+</p>
+
+**Exported dataset:** `provider_level_2021.csv`
+
+The final dataset was successfully validated, saved and downloaded for the next modelling stage.
+
+---
+
+## ◈ 08. Key Achievements
+
+- [x] Retrieved three competitor drug datasets through the CMS API.
+- [x] Integrated four SGLT2 inhibitor datasets.
+- [x] Inspected data types and missing-value patterns.
+- [x] Converted core numerical prescription metrics.
+- [x] Aggregated drug-level records by provider.
+- [x] Engineered 16 drug-specific numerical features.
+- [x] Validated provider uniqueness and dataset quality.
+- [x] Exported the final provider-level dataset.
+
+---
+
+## ◈ 09. What's Next?
+
+### DAY 03 — TARGET VARIABLE CONSTRUCTION
+
+The next phase focuses on retrieving the corresponding 2022 prescription data and constructing the target variable for supervised machine learning.
+
+**Planned direction:**
+
+| Component | Data |
+|:---|:---|
+| Input Features (X) | 2021 provider-level prescription features |
+| Prediction Year | 2022 |
+| Target Variable (y) | High Jardiance Prescriber Classification |
+
+The objective is to identify healthcare providers who are likely to become high Jardiance prescribers based on their historical prescription patterns.
+
+---
+
+<p align="center">
+  <strong>DAY 02 · COMPLETED</strong>
+  <br/>
+  <em>Building the foundation for predictive HCP targeting.</em>
+  <br/><br/>
+  <img src="https://img.shields.io/badge/NEXT-DAY%2003%20%7C%20PREDICTION%20TARGET-800020?style=for-the-badge" />
+</p>
