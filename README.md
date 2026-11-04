@@ -13,7 +13,7 @@
 
 **An end-to-end predictive analytics project using historical Medicare prescription patterns to identify healthcare professionals with the potential to become high Jardiance prescribers.**
 
-[Project Overview](#-the-project) · [Methodology](#-how-it-works) · [Results](#-model-performance) · [Technology](#-technology-stack)
+[Project Overview](#-the-project) · [Methodology](#-how-it-works) · [Results](#-model-performance) · [Visualizations](#-project-visualizations) · [Technology](#-technology-stack)
 
 </div>
 
@@ -104,7 +104,7 @@ flowchart TD
     H --> I["Model Evaluation"]
     I --> J["Gradient Boosting Selection"]
     J --> K["HCP Prediction & Ranking"]
-    K --> L["Actionable Analytical Insights"]
+    K --> L["Analytical Insights"]
 
     style A fill:#54152E,color:#FFFFFF,stroke:#54152E
     style E fill:#EFC4D2,color:#54152E,stroke:#A64D69
@@ -214,17 +214,35 @@ Three classification algorithms were trained and compared.
 
 Gradient Boosting was selected for its strongest overall balance across the evaluated metrics. Logistic Regression achieved slightly higher Precision and PR-AUC, so model selection was based on the combined evaluation rather than accuracy alone.
 
-### Visual performance analysis
+## 09 · PROJECT VISUALIZATIONS
 
-Add your exported model comparison graph here:
+The following visualizations provide an overview of the dataset, model performance, feature importance and relationships between numerical features.
 
-`assets/model_comparison.png`
+### 01 — Target Distribution
 
-Once the graph is uploaded, display it using:
+Shows the distribution of high-prescriber and non-high-prescriber providers in the modeling dataset.
 
-`![Model Performance Comparison](assets/model_comparison.png)`
+![Target Distribution](assets/target_distribution.png)
 
-## 09 · UNDERSTANDING THE MODEL
+### 02 — Model Performance Comparison
+
+Compares Logistic Regression, Random Forest and Gradient Boosting across the evaluated performance metrics.
+
+![Model Performance Comparison](assets/model_comparison.png)
+
+### 03 — Feature Importance
+
+Highlights the features that contributed most to the Gradient Boosting model's predictions.
+
+![Feature Importance](assets/feature_importance.png)
+
+### 04 — Correlation Heatmap
+
+Visualizes correlations between numerical features in the modeling dataset.
+
+![Correlation Heatmap](assets/correlation_heatmap.png)
+
+## 10 · UNDERSTANDING THE MODEL
 
 ### Feature importance
 
@@ -232,17 +250,13 @@ The Gradient Boosting model's feature importance analysis identified historical 
 
 Top contributing features included:
 
-1. `Jardiance_Tot_Clms`
-2. `Jardiance_Tot_30day_Fills`
-3. `total_sglt2_claims_2021`
-
-**Visual analysis:** Export your existing feature importance plot as `assets/feature_importance.png` and embed it below.
-
-`![Feature Importance](assets/feature_importance.png)`
+1. `Jardiance_Tot_Clms` — approximately 0.94205
+2. `Jardiance_Tot_30day_Fills` — approximately 0.02371
+3. `total_sglt2_claims_2021` — approximately 0.01873
 
 *Feature importance represents the model's learned predictive patterns. It does not establish causality or indicate the percentage of real-world prescribing behaviour explained.*
 
-## 10 · PREDICTION & HCP PRIORITIZATION
+## 11 · PREDICTION & HCP PRIORITIZATION
 
 ### From classification to prioritization
 
@@ -264,7 +278,7 @@ Providers can be sorted by predicted probability to generate a ranked list for f
 - Probability-based ranked HCP predictions
 - Saved Gradient Boosting model
 
-## 11 · TECHNOLOGY STACK
+## 12 · TECHNOLOGY STACK
 
 <div align="center">
 
@@ -281,7 +295,7 @@ Providers can be sorted by predicted probability to generate a ranked list for f
 
 </div>
 
-## 12 · PROJECT STRUCTURE
+## 13 · PROJECT STRUCTURE
 
 ```text
 hcp-targeting-prediction/
@@ -292,15 +306,8 @@ hcp-targeting-prediction/
 │   └── HCP_Targeting_and_Prediction.ipynb
 │
 ├── docs/
-│   ├── Day_1_Data_Exploration.md
-│   ├── Day_2_Data_Preprocessing.md
-│   ├── Day_3_Target_Variable_Construction.md
-│   ├── Day_4_Feature_Engineering.md
-│   ├── Day_5_Model_Training_and_Evaluation.md
-│   └── Day_6_Model_Finalization_and_Prediction.md
 │
 ├── assets/
-│   ├── project_banner.png
 │   ├── target_distribution.png
 │   ├── model_comparison.png
 │   ├── feature_importance.png
@@ -319,7 +326,7 @@ hcp-targeting-prediction/
 └── .gitignore
 ```
 
-## 13 · GETTING STARTED
+## 14 · GETTING STARTED
 
 ### Clone the repository
 
@@ -343,7 +350,7 @@ The complete workflow covers data collection, preprocessing, feature engineering
 
 *Reproducing the full pipeline requires access to the CMS data and execution of the data collection steps.*
 
-## 14 · LIMITATIONS & FUTURE SCOPE
+## 15 · LIMITATIONS & FUTURE SCOPE
 
 ### Current limitations
 
@@ -362,7 +369,7 @@ The complete workflow covers data collection, preprocessing, feature engineering
 - Interactive HCP targeting dashboard.
 - Deeper analysis of competitor prescribing trends.
 
-## 15 · RESPONSIBLE USE
+## 16 · RESPONSIBLE USE
 
 This project is an educational and analytical machine learning exercise based on publicly available CMS data.
 
