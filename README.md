@@ -1,188 +1,385 @@
-# 🩺 HCP Targeting & Prescription Prediction
+ <div align="center">
 
-### Using Data Science to Identify Future High-Prescribing Healthcare Providers
+# 🩷 HCP TARGETING & PRESCRIPTION PREDICTION
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Project-Data%20Science-6C63FF?style=for-the-badge" alt="Project Type"/>
-  <img src="https://img.shields.io/badge/Status-In%20Progress-FFA500?style=for-the-badge" alt="Project Status"/>
-  <img src="https://img.shields.io/badge/Python-Data%20Analysis-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python"/>
-  <img src="https://img.shields.io/badge/Pandas-Data%20Processing-150458?style=for-the-badge&logo=pandas&logoColor=white" alt="Pandas"/>
+### *Predicting Tomorrow's High-Value Healthcare Professionals Through Machine Learning*
+
+<p>
+  <img src="https://img.shields.io/badge/PYTHON-3.x-7A1F3D?style=for-the-badge&logo=python&logoColor=white" />
+  <img src="https://img.shields.io/badge/MACHINE_LEARNING-CLASSIFICATION-A64D69?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/HEALTHCARE_ANALYTICS-CMS-54152E?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/STATUS-COMPLETED-8E3154?style=for-the-badge" />
 </p>
+
+**An end-to-end predictive analytics project using historical Medicare prescription patterns to identify healthcare professionals with the potential to become high Jardiance prescribers.**
+
+[Project Overview](#-the-project) · [Methodology](#-how-it-works) · [Results](#-model-performance) · [Technology](#-technology-stack)
+
+</div>
 
 ---
 
-## 📌 Overview
+## 01 · THE PROJECT
 
-How can pharmaceutical companies identify healthcare providers who are likely to prescribe a particular medication more frequently in the future?
+<div align="center">
 
-This project explores a **data-driven approach to Healthcare Professional (HCP) targeting** using historical prescription data.
+### *From Historical Prescriptions to Predictive Insights.*
 
-The objective is to develop a predictive analytics workflow that can help prioritize healthcare providers based on their potential future prescribing behaviour for **Jardiance (empagliflozin)**.
+</div>
 
-Rather than relying only on historical prescription volume, the planned approach combines provider-level prescription patterns and competitor-drug information to predict future high-prescriber status.
+Pharmaceutical analytics involves understanding how healthcare professionals prescribe medications and identifying patterns that may indicate future prescribing behaviour.
 
-> **Project focus:** Transform historical prescription data into actionable insights for healthcare provider prioritization.
+**HCP Targeting & Prescription Prediction** explores this challenge through machine learning.
 
-## 🎯 Business Problem
+Using publicly available **CMS Medicare Part D Prescriber Data**, this project analyzes prescription behaviour across four SGLT2 inhibitor drugs and predicts which healthcare professionals are likely to become high prescribers of **Jardiance (Empagliflozin)** in 2022.
 
-Pharmaceutical companies have limited time and resources for engaging healthcare providers. Identifying which providers may have higher future prescribing activity can help teams prioritize their outreach more effectively.
+Instead of relying only on historical Jardiance claims, the model also considers competitor prescription activity, drug costs, prescription shares and other engineered features.
 
-This project aims to address three questions:
+<blockquote>
+<strong>THE CENTRAL IDEA</strong><br/>
+Can historical prescription behaviour help us identify healthcare professionals who are likely to become high Jardiance prescribers in the following year?
+</blockquote>
 
-- Which historical prescribing patterns may help identify future high prescribers?
-- Can competitor-drug prescription activity provide useful predictive signals?
-- How can a predictive model support more informed provider prioritization?
+## 02 · PROJECT AT A GLANCE
 
-The model is intended to support decision-making, not replace professional judgment or establish causal relationships.
+| | |
+|:---|:---|
+| **Domain** | Healthcare Analytics & Machine Learning |
+| **Problem Type** | Binary Classification |
+| **Data Source** | CMS Medicare Part D Prescriber Dataset |
+| **Historical Period** | 2021 |
+| **Prediction Period** | 2022 |
+| **Target Drug** | Jardiance |
+| **Competitor Drugs** | Farxiga, Invokana, Steglatro |
+| **Provider Population** | 101,500 unique NPIs |
+| **Final Features** | 21 |
+| **Selected Algorithm** | Gradient Boosting Classifier |
 
-## 🔬 Project Approach
+## 03 · THE DATA STORY
 
-The project follows a structured data science workflow:
+### Understanding the prescription landscape
+
+The project uses four drugs from the SGLT2 inhibitor category.
+
+| Drug | Role in the Project | Generic Name |
+|:---|:---|:---|
+| **Jardiance** | 🎯 Target drug | Empagliflozin |
+| Farxiga | Competitor | Dapagliflozin |
+| Invokana | Competitor | Canagliflozin |
+| Steglatro | Competitor | Ertugliflozin |
+
+### Dataset statistics
+
+<div align="center">
+
+| 2021 DATA | 2022 DATA |
+|:---:|:---:|
+| **139,592** | **192,662** |
+| Prescription records | Prescription records |
+| **101,500** | **139,260** |
+| Unique providers | Unique providers |
+
+</div>
+
+**Why NPI?**
+
+The National Provider Identifier (NPI) serves as the unique healthcare provider identifier. It enables us to connect provider-level prescription information across different years.
+
+**Data source:** [CMS Medicare Part D Prescribers ↗](https://data.cms.gov/provider-summary-by-type-of-service/medicare-part-d-prescribers)
+
+## 04 · HOW IT WORKS
+
+### The end-to-end machine learning pipeline
+
+```mermaid
+%%{init: {'theme':'base','themeVariables':{'primaryColor':'#F4D9E2','primaryTextColor':'#54152E','primaryBorderColor':'#7A1F3D','lineColor':'#A64D69','secondaryColor':'#FFF5F7','tertiaryColor':'#FFFFFF','fontFamily':'Arial'}}}%%
+flowchart TD
+    A["CMS Medicare Part D Data"] --> B["Data Collection<br/>2021 & 2022"]
+    B --> C["Data Cleaning & Exploration"]
+    C --> D["Provider-Level Aggregation"]
+    D --> E["Feature Engineering<br/>16 Original + 5 Engineered"]
+    E --> F["2022 Target Construction<br/>80th Percentile Threshold"]
+    F --> G["Train-Test Split<br/>80:20 Stratified"]
+    G --> H["Model Training"]
+    H --> I["Model Evaluation"]
+    I --> J["Gradient Boosting Selection"]
+    J --> K["HCP Prediction & Ranking"]
+    K --> L["Actionable Analytical Insights"]
+
+    style A fill:#54152E,color:#FFFFFF,stroke:#54152E
+    style E fill:#EFC4D2,color:#54152E,stroke:#A64D69
+    style H fill:#F4D9E2,color:#54152E,stroke:#A64D69
+    style J fill:#7A1F3D,color:#FFFFFF,stroke:#54152E
+    style K fill:#EFC4D2,color:#54152E,stroke:#A64D69
+    style L fill:#54152E,color:#FFFFFF,stroke:#54152E
+```
+
+### The prediction strategy
 
 | Stage | Approach |
-|---|---|
-| 01 · Data Collection | Retrieve public Medicare Part D prescriber data through the CMS API. |
-| 02 · Data Exploration | Inspect data structure, data types, missing values and prescription distributions. |
-| 03 · Data Preparation | Validate records and prepare consistent provider-level datasets across years. |
-| 04 · Feature Engineering | Develop features from historical Jardiance and competitor-drug prescription activity. |
-| 05 · Target Definition | Define high-prescriber status using future-year prescription activity. |
-| 06 · Model Development | Train classification models to predict future high-prescriber status. |
-| 07 · Model Evaluation | Evaluate predictive performance using appropriate classification and ranking metrics. |
-| 08 · Business Insights | Translate model outputs into practical provider-prioritization recommendations. |
+|:---|:---|
+| Input | 2021 prescribing behaviour |
+| Feature preparation | Drug-level and provider-level metrics |
+| Target construction | 2022 Jardiance prescription claims |
+| Classification | High prescriber (1) / Not high prescriber (0) |
+| Prediction | Probability of belonging to the high-prescriber class |
+| Output | Provider-level predictions and ranked HCP list |
 
-*The workflow above describes the planned project. Model development and evaluation are not yet complete.*
+## 05 · FEATURE ENGINEERING
 
-## 📊 Dataset
+### Giving historical data more meaning
 
-**Data source:** CMS — Centers for Medicare & Medicaid Services
+Five additional features were engineered to capture provider prescribing patterns and competitor activity.
 
-**Dataset:** Medicare Part D Prescribers — by Provider and Drug
+| Engineered Feature | What It Captures |
+|:---|:---|
+| `total_sglt2_claims_2021` | Overall claims across the four selected drugs |
+| `competitor_claims_2021` | Prescription activity for competitor drugs |
+| `jardiance_claim_share_2021` | Jardiance's share of total selected drug claims |
+| `num_competitor_drugs_2021` | Number of competitor drugs prescribed |
+| `total_sglt2_drug_cost_2021` | Total drug cost across the selected drugs |
 
-🔗 [Explore the official CMS dataset](https://data.cms.gov/provider-summary-by-type-of-service/medicare-part-d-prescribers/medicare-part-d-prescribers-by-provider-and-drug)
+<div align="center">
 
-The initial extract contains Jardiance prescription records for reporting year 2021, retrieved through the CMS data API.
+| ORIGINAL FEATURES | ENGINEERED FEATURES | FINAL FEATURES |
+|:---:|:---:|:---:|
+| 16 | + 5 | **21** |
 
-### Initial Data Exploration
+</div>
 
-| Check | Result |
-|---|---:|
-| Jardiance records retrieved | 87,157 |
-| Unique provider NPIs in the extract | 87,157 |
-| Exact duplicate rows | 0 |
-| Missing values in selected columns | 0 |
-| Minimum total claims | 11 |
-| Maximum total claims | 1,734 |
+## 06 · TARGET VARIABLE
 
-These results describe the initial Jardiance extract only. The missing-value check covered selected columns, and the dataset still requires further validation before modelling.
+### Defining a high prescriber
 
-### Key Variables
+The target variable was constructed using the distribution of 2022 Jardiance claims among the 2021 provider cohort.
 
-| Variable | Description |
-|---|---|
-| `Prscrbr_NPI` | Unique provider identifier |
-| `Prscrbr_Type` | Provider type |
-| `Prscrbr_City` | Provider's city |
-| `Prscrbr_State_Abrvtn` | Provider's state |
-| `Brnd_Name` | Drug brand name |
-| `Gnrc_Name` | Generic drug name |
-| `Tot_Clms` | Total prescription claims |
-| `Tot_30day_Fills` | Total 30-day prescription fills |
-| `Tot_Day_Suply` | Total days of medication supplied |
-| `Tot_Drug_Cst` | Total drug cost |
-| `Tot_Benes` | Reported beneficiary count |
+The **80th percentile** was selected as the high-prescriber threshold.
 
-## 🧠 Planned Predictive Modelling
+<blockquote>
+<strong>Classification threshold: 60 Jardiance claims</strong><br/>
+Providers with 60 or more claims were labelled High Prescribers (1); providers below this threshold were labelled Not High Prescribers (0).
+</blockquote>
 
-The central idea is to use information from one year to predict prescribing behaviour in a later year.
+### Target distribution
 
-**Historical data → Feature engineering → Classification model → Future high-prescriber prediction**
+| Provider Class | Count | Distribution |
+|:---|---:|---:|
+| Not High Prescriber (0) | 80,870 | 79.67% |
+| High Prescriber (1) | 20,630 | 20.33% |
+| **Total** | **101,500** | **100%** |
 
-The planned modelling workflow includes:
+## 07 · MODEL DEVELOPMENT
 
-- Defining a provider-level prediction population.
-- Building historical prescribing features for Jardiance and relevant competitor drugs.
-- Creating a binary target based on future-year Jardiance prescription activity.
-- Using a time-based training and validation strategy to reduce temporal data leakage.
-- Comparing model performance with suitable baseline approaches.
+### Three algorithms. One predictive objective.
 
-The exact target definition, feature set and model selection will be finalized after the multi-year dataset has been prepared.
+Three classification algorithms were trained and compared.
 
-## 📈 Evaluation Strategy
+| Model | Purpose |
+|:---|:---|
+| Logistic Regression | Baseline linear classification |
+| Random Forest | Ensemble learning with multiple decision trees |
+| Gradient Boosting | Sequential boosting for improved predictive performance |
 
-The planned evaluation will consider both predictive performance and the practical value of the model for prioritization.
+**Training configuration**
 
-| Metric | Purpose |
-|---|---|
-| Precision | Measure the proportion of predicted high prescribers who meet the target definition. |
-| Precision@K | Assess the quality of the highest-ranked providers selected for prioritization. |
-| Lift | Compare the high-prescriber rate in the selected group with the overall rate. |
-| ROC-AUC | Measure the model's ability to distinguish between the two target classes across thresholds. |
-| PR-AUC | Evaluate the precision-recall trade-off, particularly if the target classes are imbalanced. |
+- Train-test ratio: 80:20
+- Stratification: Enabled
+- Random state: 42
+- Training samples: 81,200
+- Testing samples: 20,300
+- Predictive features: 21
 
-No model performance results are reported yet because model training and evaluation are still pending.
+## 08 · MODEL PERFORMANCE
 
-## 🛠️ Tech Stack
+### Comparing the candidates
 
-- **Python** — Data analysis and modelling
-- **Pandas** — Data manipulation and preprocessing
-- **NumPy** — Numerical operations
-- **Matplotlib / Seaborn** — Exploratory data visualizations
-- **Scikit-learn** — Planned classification modelling and evaluation
-- **Google Colab / Jupyter Notebook** — Development environment
-- **Git & GitHub** — Version control and project documentation
+| Metric | Logistic Regression | Random Forest | Gradient Boosting |
+|:---|---:|---:|---:|
+| Accuracy | 90.00% | 88.82% | **90.05%** |
+| Precision | **84.67%** | 76.66% | 82.03% |
+| Recall | 62.00% | 64.71% | **65.37%** |
+| F1-Score | 71.58% | 70.18% | **72.75%** |
+| ROC-AUC | 92.01% | 90.10% | **92.13%** |
+| PR-AUC | **81.97%** | 78.14% | 81.85% |
 
-## 📁 Repository Structure
+<div align="center">
+
+### 🏆 SELECTED MODEL
+
+# GRADIENT BOOSTING
+
+**90.05% Accuracy · 92.13% ROC-AUC · 72.75% F1-Score**
+
+</div>
+
+Gradient Boosting was selected for its strongest overall balance across the evaluated metrics. Logistic Regression achieved slightly higher Precision and PR-AUC, so model selection was based on the combined evaluation rather than accuracy alone.
+
+### Visual performance analysis
+
+Add your exported model comparison graph here:
+
+`assets/model_comparison.png`
+
+Once the graph is uploaded, display it using:
+
+`![Model Performance Comparison](assets/model_comparison.png)`
+
+## 09 · UNDERSTANDING THE MODEL
+
+### Feature importance
+
+The Gradient Boosting model's feature importance analysis identified historical Jardiance prescription activity as the strongest predictive signal.
+
+Top contributing features included:
+
+1. `Jardiance_Tot_Clms`
+2. `Jardiance_Tot_30day_Fills`
+3. `total_sglt2_claims_2021`
+
+**Visual analysis:** Export your existing feature importance plot as `assets/feature_importance.png` and embed it below.
+
+`![Feature Importance](assets/feature_importance.png)`
+
+*Feature importance represents the model's learned predictive patterns. It does not establish causality or indicate the percentage of real-world prescribing behaviour explained.*
+
+## 10 · PREDICTION & HCP PRIORITIZATION
+
+### From classification to prioritization
+
+The final model generates provider-level predictions using the probability of belonging to the high-prescriber class.
+
+Each prediction contains:
+
+| Output | Description |
+|:---|:---|
+| NPI | Unique provider identifier |
+| `Predicted_Class` | Predicted high / not-high category |
+| `High_Prescriber_Probability` | Estimated probability of the high-prescriber class |
+
+Providers can be sorted by predicted probability to generate a ranked list for further analytical review.
+
+**Final deliverables include:**
+
+- Sample HCP predictions
+- Probability-based ranked HCP predictions
+- Saved Gradient Boosting model
+
+## 11 · TECHNOLOGY STACK
+
+<div align="center">
+
+| CATEGORY | TECHNOLOGIES |
+|:---|:---|
+| Language | Python |
+| Data Collection | CMS API, Requests |
+| Data Manipulation | Pandas, NumPy |
+| Visualization | Matplotlib, Seaborn |
+| Machine Learning | Scikit-learn |
+| Model Persistence | Joblib |
+| Environment | Google Colab, Jupyter Notebook |
+| Version Control | Git, GitHub |
+
+</div>
+
+## 12 · PROJECT STRUCTURE
 
 ```text
 hcp-targeting-prediction/
 │
-├── notebooks/
-│   └── 01_data_exploration.ipynb
-│
 ├── README.md
+│
+├── notebooks/
+│   └── HCP_Targeting_and_Prediction.ipynb
+│
+├── docs/
+│   ├── Day_1_Data_Exploration.md
+│   ├── Day_2_Data_Preprocessing.md
+│   ├── Day_3_Target_Variable_Construction.md
+│   ├── Day_4_Feature_Engineering.md
+│   ├── Day_5_Model_Training_and_Evaluation.md
+│   └── Day_6_Model_Finalization_and_Prediction.md
+│
+├── assets/
+│   ├── project_banner.png
+│   ├── target_distribution.png
+│   ├── model_comparison.png
+│   ├── feature_importance.png
+│   └── correlation_heatmap.png
+│
+├── outputs/
+│   ├── model_comparison.csv
+│   ├── feature_importance.csv
+│   ├── sample_hcp_predictions.csv
+│   └── ranked_hcp_predictions.csv
+│
+├── models/
+│   └── hcp_gradient_boosting_model.pkl
+│
 ├── requirements.txt
 └── .gitignore
 ```
 
-The repository structure will evolve as data preparation, feature engineering and modelling are implemented.
+## 13 · GETTING STARTED
 
-## 🚧 Current Progress
+### Clone the repository
 
-- [x] Define the business problem and project objective
-- [x] Access the CMS data API
-- [x] Retrieve the initial Jardiance extract
-- [x] Inspect columns and data types
-- [x] Check duplicate rows and missing values in selected columns
-- [x] Convert total claims to a numeric format
-- [x] Examine descriptive statistics and high-claims records
-- [ ] Collect competitor-drug data
-- [ ] Prepare additional reporting years
-- [ ] Perform comprehensive data-quality validation
-- [ ] Build provider-level features
-- [ ] Define the future-year prediction target
-- [ ] Train and validate classification models
-- [ ] Evaluate model performance
-- [ ] Develop business recommendations
+```bash
+git clone https://github.com/annanyaoberoi/hcp-targeting-prediction.git
 
-## ⚠️ Data Limitations & Responsible Use
+cd hcp-targeting-prediction
+```
 
-- Medicare Part D data represents reported prescription activity and does not provide a complete view of every prescription or every patient.
-- Prescription claims and beneficiary counts represent different measures.
-- Suppressed or unavailable values must be handled carefully and should not automatically be interpreted as zero.
-- Historical associations do not establish that any particular factor causes future prescribing behaviour.
-- The initial extract is not sufficient on its own to train the planned future-year prediction model.
-- Predictions would be analytical decision-support signals, not recommendations for individual patient treatment.
+### Install dependencies
 
-## 🌟 Project Goal
+```bash
+pip install -r requirements.txt
+```
 
-Build an end-to-end data science project that demonstrates how public healthcare data can be transformed into meaningful features, evaluated through time-aware predictive modelling, and translated into practical business insights.
+### Run the notebook
 
-The emphasis is on **data quality, sound validation, interpretable results and responsible decision-making**.
+Open the notebook in Google Colab or Jupyter Notebook and execute the cells sequentially.
+
+The complete workflow covers data collection, preprocessing, feature engineering, model training, evaluation and HCP prediction.
+
+*Reproducing the full pipeline requires access to the CMS data and execution of the data collection steps.*
+
+## 14 · LIMITATIONS & FUTURE SCOPE
+
+### Current limitations
+
+- The dataset represents Medicare Part D prescription activity, not all US healthcare prescriptions.
+- The high-prescriber threshold is relative to the selected provider cohort.
+- The evaluation uses a stratified random provider-level holdout rather than independent temporal validation.
+- Predicted probabilities are model estimates, not guaranteed future behaviour.
+- Feature importance does not imply causal relationships.
+
+### What could come next?
+
+- Temporal validation using additional prescription years.
+- Hyperparameter optimization.
+- Advanced boosting algorithms such as XGBoost and LightGBM.
+- Model explainability using SHAP.
+- Interactive HCP targeting dashboard.
+- Deeper analysis of competitor prescribing trends.
+
+## 15 · RESPONSIBLE USE
+
+This project is an educational and analytical machine learning exercise based on publicly available CMS data.
+
+Its outputs are intended to support research into prescription patterns and predictive analytics. They should not be interpreted as medical advice, clinical recommendations or definitive assessments of individual healthcare professionals.
 
 ---
 
-<p align="center">
-  <b>Built with Python, curiosity, and a data-driven mindset.</b>
-  <br/>
-  <sub>Academic portfolio project · Work in progress</sub>
-</p>
+<div align="center">
+
+## MADE WITH DATA, CURIOSITY & MACHINE LEARNING 🩷
+
+**Annanya Oberoi**
+
+B.Tech · Computer Science & Engineering (AI & ML)
+
+[GitHub](https://github.com/annanyaoberoi) · [Portfolio](https://annanya-oberoi-portfolio.vercel.app)
+
+<sub>Healthcare Analytics · Predictive Modelling · Machine Learning</sub>
+
+</div>
